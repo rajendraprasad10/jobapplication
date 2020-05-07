@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+{% block title %} Admin Grid {% endblock %}
+
+{% block body %}
+
+<div class="jumbotron p-3">
+    <div class="well text-center">
+        <h1>Admin Grid For Job App</h1>
+    </div>
+</div>
+
+<!--- the main container--->
+<div class="container">
+     <!-----------------------------start Search ------------------------------------>
+    <strong> Search Value: {{tag}}</strong>
+    <div class="row">
+            <div class="jumbotron p-3 ">
+                <form method="POST" class="form-inline">
+                    <input class="form-control mr-sm-2" type="search" name='tag' placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                <!---flash Message --->
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                    {{message}}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                 <!-----------------------------end search and message ------------------------------------>
+
+
+                <!-----------------------------start admin table ------------------------------------>
+                <table class="table table-hover table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Position</th>
+                        <th>Experience</th>
+                        <th>Note</th>
+                        <th>Action</th>
+
+                    </tr>
+                    {% for emp in employees %}
+                    <tr>
+                        <td>{{ emp.id }}</td>
+                        <td>{{ emp.name }}</td>
+                        <td>{{ emp.lastname }}</td>
+                        <td>{{ emp.email }}</td>
+                        <td>{{ emp.phone }}</td>
+                        <td>{{ emp.address }}</td>
+                        <td>{{ emp.position }}</td>
+                        <td>{{ emp.experience }}</td>
+                        <td>{{ emp.note}}</td>
+                        <td>
+                            <a href="/update/{{emp.id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{emp.id}}">Note</a>
+                        </td>
+                    </tr>
+
+                    <!------------------end admin table -------------------------------->
+
+
+
+                  <!------------------------------ start Add Note ------------------------------------------>
+<div id="modaledit{{emp.id}}" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">Note Info</h4>
+         </div>
+         <div class="modal-body">
+            <form action="{{url_for('update')}}" method="POST">
+               <div class="form-group">
+                  <label>Note:</label>
+                   <input type="hidden"  name="id" value="{{ emp.id }}">
+                  <input type="text" class="form-control" name="note" value="{{ emp.note }}">
+               </div>
+               <div class="form-group">
+                  <button class="btn btn-primary" type="submit">Update</button>
+               </div>
+            </form>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>
+ <!------------------------------ start Add Note ------------------------------------------>
+{% endfor %}
+</table>
+                <!------------------------------ End table ------------------------------------------>
+</div>
+    </div>
+</div>
+{% endblock%}
